@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lengre — töötavad automatiseerimislahendused</title>
+  <meta name="description" content="Lengre võtab konkreetse Exceli, PDF-i või andmetöötluse probleemi ja annab vastu töötava lahenduse.">
+  <style>
+    :root{
+      --bg:#f6f8fb; --surface:#ffffff; --text:#172033; --muted:#627086;
+      --line:#dfe5ee; --accent:#2457d6; --accent-dark:#173d9f;
+      --soft:#eef3ff; --good:#167451; --danger:#9b3a3a; --max:1120px;
+      --shadow:0 12px 32px rgba(23,32,51,.08)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+    a{color:inherit}
+    .wrap{max-width:var(--max);margin:auto;padding:0 24px}
+    header{position:sticky;top:0;z-index:10;background:rgba(246,248,251,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    nav{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:22px}
+    .logo{width:36px;height:36px;border-radius:10px;background:var(--accent);color:#fff;display:grid;place-items:center}
+    .navlinks{display:flex;gap:20px;align-items:center;font-size:14px;color:var(--muted)}
+    .navlinks a{text-decoration:none}
+    .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:750;border:1px solid transparent}
+    .btn.primary{background:var(--accent);color:#fff}
+    .btn.secondary{background:#fff;border-color:var(--line)}
+    .hero{padding:92px 0 68px}
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:52px;align-items:center}
+    .eyebrow{display:inline-block;padding:7px 11px;border-radius:999px;background:var(--soft);color:var(--accent-dark);font-size:13px;font-weight:800;margin-bottom:17px}
+    h1{font-size:clamp(42px,6vw,68px);letter-spacing:-.04em;line-height:1.03;margin:0 0 20px}
+    h2{font-size:36px;letter-spacing:-.025em;line-height:1.15;margin:0 0 12px}
+    h3{margin:0 0 8px}
+    .lead{font-size:20px;color:var(--muted);max-width:720px;margin:0 0 28px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .mini{font-size:14px;color:var(--muted);margin-top:16px}
+    section{padding:66px 0}
+    .panel,.card,.box{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+    .panel{padding:24px}
+    .flow{display:grid;gap:12px}
+    .flow-item{display:grid;grid-template-columns:42px 1fr;gap:13px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fbfcfe}
+    .num{width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--accent-dark);display:grid;place-items:center;font-weight:800}
+    .flow-item span{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+    .section-head{max-width:790px;margin-bottom:28px}
+    .section-head p{margin:0;color:var(--muted);font-size:18px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .four{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .card{padding:22px}
+    .icon{width:40px;height:40px;border-radius:11px;background:var(--soft);color:var(--accent-dark);display:grid;place-items:center;font-weight:850;margin-bottom:13px}
+    .card p,.box p{color:var(--muted);margin:0}
+    .positive{border-top:4px solid var(--good)}
+    .negative{border-top:4px solid #c86a6a}
+    .price{font-size:30px;font-weight:850;margin:10px 0 12px}
+    .price-note{font-size:14px;color:var(--muted)}
+    .list{padding-left:19px;color:var(--muted);font-size:15px}
+    .list li{margin:7px 0}
+    .examples{margin-top:20px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--line)}
+    .row:last-child{border-bottom:0}
+    .row span{color:var(--muted)}
+    .row b{text-align:right}
+    .demo-placeholder{min-height:240px;display:grid;place-items:center;text-align:center;padding:24px;border:1px dashed #b9c5d8;border-radius:14px;background:linear-gradient(145deg,#f3f7ff,#fcfdff);color:var(--muted)}
+    .demo-placeholder strong{display:block;color:var(--text);font-size:20px;margin-bottom:8px}
+    .step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}
+    .step small{font-weight:850;color:var(--accent)}
+    .step h3{margin:7px 0 5px;font-size:18px}
+    .step p{font-size:14px;color:var(--muted);margin:0}
+    .guarantee{background:#f1f8f5;border-color:#cfe5da}
+    .notice{margin-top:20px;padding:20px;border-radius:15px;background:#fff;border:1px solid var(--line);color:var(--muted)}
+    .notice b{color:var(--text)}
+    .cta{background:var(--text);color:#fff;border-radius:24px;padding:40px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+    .cta p{color:#cfd6e2;margin:8px 0 0}
+    .cta .btn{background:#fff;color:var(--text)}
+    footer{padding:36px 0 48px;color:var(--muted);font-size:14px}
+    .footerline{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;gap:20px}
+    .version{font-size:11px;opacity:.55}
+    @media(max-width:900px){
+      .hero-grid,.two,.cta{grid-template-columns:1fr}
+      .three{grid-template-columns:1fr}
+      .four{grid-template-columns:1fr 1fr}
+      .navlinks a:not(.btn){display:none}
+    }
+    @media(max-width:560px){
+      .wrap{padding:0 18px}
+      .hero{padding-top:60px}
+      h1{font-size:43px}
+      .lead{font-size:18px}
+      .four{grid-template-columns:1fr}
+      .row{align-items:flex-start;flex-direction:column;gap:4px}
+      .cta{padding:28px}
+      .footerline{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="index.html#top"><span class="logo">L</span>Lengre</a>
+      <div class="navlinks">
+        <a href="#teenused">Teenused</a>
+        <a href="#demo">Demo</a>
+        <a href="#hinnad">Hinnad</a>
+        <a href="#jarelhooldus">Järelhooldus</a>
+        <a href="minust.html">Minust</a>
+        <a class="btn primary" href="mailto:info@lengre.ee?subject=Automatiseerimise%20päring">Võta ühendust</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Praktiline automatiseerimine väikeettevõtetele</div>
+      <h1>Anna mulle probleem.<br>Saad vastu töötava lahenduse.</h1>
+      <p class="lead">Lengre ei müü konsultatsioonitunde ega soovituste slaide. Võtan konkreetse Exceli-, PDF-i või andmetöötluse probleemi ja ehitan lahenduse, mis teeb selle töö päriselt ära.</p>
+      <div class="actions">
+        <a class="btn primary" href="mailto:info@lengre.ee?subject=Mul%20on%20probleem%2C%20mida%20tahaksin%20automatiseerida">Saada mulle probleem</a>
+        <a class="btn secondary" href="#hinnad">Vaata hindu</a>
+      </div>
+      <div class="mini">Esmane hinnang tasuta · Fikseeritud hind enne alustamist · Lõpptulemuseks töötav lahendus</div>
+    </div>
+
+    <div class="panel">
+      <div class="flow">
+        <div class="flow-item"><div class="num">1</div><div><b>Näita probleemi</b><span>Saada fail, näidis või kirjelda korduvat käsitööd.</span></div></div>
+        <div class="flow-item"><div class="num">2</div><div><b>Lepime tulemuse kokku</b><span>Paneme paika, mida lahendus peab tegema ja mis see maksab.</span></div></div>
+        <div class="flow-item"><div class="num">3</div><div><b>Teen lahenduse valmis</b><span>Ehitan, testin ja parandan kokkulepitud tööriista.</span></div></div>
+        <div class="flow-item"><div class="num">4</div><div><b>Võtad kasutusse</b><span>Saad tööriista, mida saad oma igapäevatöös edasi kasutada.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Mitte konsultatsioon. Töötav lahendus.</h2>
+      <p>Minu töö ei lõpe soovitusega, mida võiks teha. Eesmärk on anda sulle valmis tööriist või automatiseeritud töövoog.</p>
+    </div>
+    <div class="two">
+      <div class="card negative">
+        <div class="icon">×</div>
+        <h3>Mitte lihtsalt nõuanne</h3>
+        <p>Sa ei saa minult ainult auditit, esitlust või nimekirja ideedest, mille pead ise hiljem ellu viima.</p>
+      </div>
+      <div class="card positive">
+        <div class="icon">✓</div>
+        <h3>Valmis lahendus</h3>
+        <p>Saad testitud tööriista, mis lahendab kokkulepitud probleemi ja mida saad pärast üleandmist ise kasutada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Selge fookus</h2>
+      <p>Lengre ei ole tarkvaraarendusettevõte. Keskendun väikestele ja konkreetsetele tööprotsessidele, mida saab muuta märgatavalt kiiremaks ja lihtsamaks.</p>
+    </div>
+    <div class="two">
+      <div class="card positive">
+        <h3>Mida ma teen</h3>
+        <ul class="list">
+          <li>Exceli tööde automatiseerimine</li>
+          <li>PDF-ist andmete töötlemine</li>
+          <li>Mitme faili ühendamine</li>
+          <li>Automaatkontrollid ja arvutused</li>
+          <li>Korduvad raportid</li>
+          <li>Igapäevatööks mõeldud väikesed tööriistad</li>
+        </ul>
+      </div>
+      <div class="card negative">
+        <h3>Mida ma ei tee</h3>
+        <ul class="list">
+          <li>Suured infosüsteemid</li>
+          <li>Eritarkvara arendusprojektid</li>
+          <li>API-liidestused</li>
+          <li>Keerukad süsteemiintegratsioonid</li>
+          <li>Püsiv arendusmeeskonna roll</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="teenused">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Milliseid töid saab automatiseerida?</h2>
+      <p>Hea kandidaat on töö, mida tehakse ikka ja jälle samade sammudega — kopeeritakse, võrreldakse, korrastatakse, arvutatakse või koostatakse raportit.</p>
+    </div>
+    <div class="three">
+      <div class="card"><div class="icon">PDF</div><h3>PDF → Excel</h3><p>Hinnakirjad, raportid ja muud struktureeritud andmed automaatselt kasutatavasse tabelisse.</p></div>
+      <div class="card"><div class="icon">XL</div><h3>Exceli automatiseerimine</h3><p>Failide ühendamine, andmete puhastamine, kontrollid, arvutused ja korduvad raportid.</p></div>
+      <div class="card"><div class="icon">↻</div><h3>Korduvad töövood</h3><p>Kui sama protsess kordub iga päev, nädal või kuu, saab sageli suure osa sellest automatiseerida.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Demo: hinnakiri PDF-ist automaatselt Excelisse</h2>
+      <p>Näide tüüpilisest olukorrast, kus tarnija saadab mitmeleheküljelise PDF-i ja andmeid ei pea enam rida-realt käsitsi ümber kirjutama.</p>
+    </div>
+    <div class="two">
+      <div class="card">
+        <div class="demo-placeholder">
+          <div><strong>Demo video tuleb siia</strong>30–60 sekundit: PDF → import → korrastatud Excel → valmis tulemus.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row"><span>Manuaalne töö</span><b>~30 min</b></div>
+        <div class="row"><span>Automatiseeritud töö</span><b style="color:var(--good)">~30 sek</b></div>
+        <div class="row"><span>Tooteridu näites</span><b>54</b></div>
+        <div class="row"><span>Tulemus</span><b>Valmis Excel</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hinnad">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Hinnad</h2>
+      <p>Sa ei pea hinna teada saamiseks müügikõnet tegema. Esmane hinnang on tasuta ja enne töö alustamist saad alati fikseeritud hinna.</p>
+    </div>
+    <div class="three">
+      <div class="card">
+        <div class="icon">S</div>
+        <h3>Väike automatiseerimine</h3>
+        <div class="price">290–490 €</div>
+        <p>Üks selge korduv ülesanne, üks-kaks sisendfaili ja lihtsam loogika.</p>
+      </div>
+      <div class="card">
+        <div class="icon">M</div>
+        <h3>Keskmine automatiseerimine</h3>
+        <div class="price">590–990 €</div>
+        <p>Mitu faili, rohkem ärireegleid, PDF/Excel töövoog, kontrollid või keerukam raport.</p>
+      </div>
+      <div class="card">
+        <div class="icon">L</div>
+        <h3>Suurem automatiseerimine</h3>
+        <div class="price">1 200–1 900 €</div>
+        <p>Mitu tööetappi või andmeallikat, keerukam loogika ning rohkem testimist.</p>
+      </div>
+    </div>
+
+    <div class="panel examples">
+      <h3>Näited</h3>
+      <div class="row"><span>PDF-hinnakiri → korrastatud Excel</span><b>alates 290 €</b></div>
+      <div class="row"><span>Mitu Exceli faili → üks koondraport</span><b>alates 390 €</b></div>
+      <div class="row"><span>Igakuine raport ühe nupuvajutusega</span><b>alates 490 €</b></div>
+      <div class="row"><span>Mitmeetapiline andmetöötluse töövoog</span><b>alates 790 €</b></div>
+      <p class="price-note">Hind sisaldab kokkulepitud lahenduse tegemist, testimist, üleandmist ja 30-päevast töögarantiid. Kui töö osutub minu hinnanguvea tõttu keerulisemaks, ei kasva arve automaatselt.</p>
+    </div>
+  </div>
+</section>
+
+<section id="koostoo">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Üks probleem. Üks kokkulepitud tulemus.</h2>
+      <p>Eesmärk ei ole teha pikka IT-projekti, vaid võtta konkreetne käsitööprotsess ja viia see töötava lahenduseni.</p>
+    </div>
+    <div class="four">
+      <div class="step"><small>01</small><h3>Näita probleemi</h3><p>Saada fail või näita, mida täna käsitsi teed.</p></div>
+      <div class="step"><small>02</small><h3>Lepime tulemuse kokku</h3><p>Paneme paika, mida lahendus peab tegema ja mis see maksab.</p></div>
+      <div class="step"><small>03</small><h3>Teen valmis</h3><p>Ehitan ja testin lahenduse, mitte ainult ei kirjelda seda.</p></div>
+      <div class="step"><small>04</small><h3>Võtad kasutusse</h3><p>Saad tööriista koos lühikese kasutusjuhisega.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="jarelhooldus">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Mis saab pärast üleandmist?</h2>
+      <p>Lahendus jääb sinu igapäevatöösse kasutamiseks. Kohustuslikku kuutasu ei ole. Kui protsess või sisend hiljem muutub, saan lahendust täiendada.</p>
+    </div>
+
+    <div class="two">
+      <div class="card guarantee">
+        <h3>30 päeva töögarantiid</h3>
+        <p>Kui kokkulepitud funktsioon ei tööta minu tehtud lahenduse vea tõttu, parandan selle garantiiperioodil tasuta.</p>
+      </div>
+      <div class="card">
+        <h3>Täiendused pärast üleandmist</h3>
+        <div class="row"><span>Väike muudatus</span><b>90–190 €</b></div>
+        <div class="row"><span>Keskmine täiendus</span><b>250–490 €</b></div>
+        <div class="row"><span>Suurem muutus</span><b>uus fikseeritud pakkumine</b></div>
+      </div>
+    </div>
+
+    <div class="notice">
+      <b>Näide:</b> lahendus töötab 3 kuud korrektselt, kuid tarnija muudab seejärel PDF-i või Exceli formaati ja senine tööriist enam ei sobi. See ei ole vana lahenduse viga, vaid muutus sisendis. Vaatan muudatuse üle ja annan enne töö alustamist uue fikseeritud hinna.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <div>
+        <h2>Kas sul on konkreetne töö, mis võiks käia automaatselt?</h2>
+        <p>Saada näidis või kirjelda probleemi. Kui seda on mõistlik automatiseerida, saad pakkumise töötavale lahendusele — mitte konsultatsioonile.</p>
+      </div>
+      <a class="btn" href="mailto:info@lengre.ee?subject=Automatiseerimise%20päring">info@lengre.ee</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap footerline">
+    <div>© 2026 Lengre</div>
+    <div>Töötavad automatiseerimislahendused · Excel · PDF · andmetöötlus <span class="version">v4</span></div>
+  </div>
+</footer>
+</body>
+</html>
